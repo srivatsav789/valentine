@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💘</title>
+
+<style>
+body{
+margin:0;
+font-family:system-ui;
+text-align:center;
+height:100vh;
+overflow:hidden;
+background:linear-gradient(135deg,#ff4d7d,#ff86c8,#ffd1e8);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.hidden{display:none;}
+
+.container{
+position:relative;
+}
+
+button{
+padding:14px 24px;
+font-size:18px;
+border-radius:999px;
+border:none;
+margin:10px;
+font-weight:bold;
+cursor:pointer;
+}
+
+#yesBtn{
+background:#ff2d55;
+color:white;
+animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+0%,100%{transform:scale(1);}
+50%{transform:scale(1.1);}
+}
+
+#noBtn{
+position:absolute;
+background:black;
+color:white;
+}
+
+.photoRing{
+width:220px;
+height:220px;
+border-radius:50%;
+margin:20px auto;
+background:conic-gradient(#fff,#ff2d55,#ff86c8,#fff);
+display:flex;
+align-items:center;
+justify-content:center;
+animation:spin 3s linear infinite;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+.photoInner{
+width:200px;
+height:200px;
+border-radius:50%;
+overflow:hidden;
+}
+
+#previewPhoto{
+width:100%;
+height:100%;
+object-fit:cover;
+object-position:65% 35%;
+}
+
+.downloadBtn{
+background:white;
+color:#ff2d55;
+margin-top:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="askView" class="container">
+<h1>Will you be my Valentine? 💘</h1>
+<div>
+<button id="yesBtn">Yes 💖</button>
+<button id="noBtn">No 🙃</button>
+</div>
+</div>
+
+<div id="yesView" class="hidden">
+<h1>It’s a date!!! 🥰💞🎉</h1>
+
+<div class="photoRing">
+<div class="photoInner">
+<img id="previewPhoto"
+src="data:image/jpeg;base64,PASTE_BASE64_HERE">
+</div>
+</div>
+
+<button class="downloadBtn" onclick="downloadStory()">Download Story 📱</button>
+<button class="downloadBtn" onclick="downloadSquare()">Download Square 🟪</button>
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<script>
+
+// ---------------- NO BUTTON DODGE ----------------
+const noBtn=document.getElementById("noBtn");
+
+function moveNo(e){
+const x=Math.random()*(window.innerWidth-100);
+const y=Math.random()*(window.innerHeight-50);
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
+}
+
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
+
+// ---------------- YES CLICK ----------------
+const yesBtn=document.getElementById("yesBtn");
+const askView=document.getElementById("askView");
+const yesView=document.getElementById("yesView");
+
+yesBtn.addEventListener("click",()=>{
+askView.classList.add("hidden");
+yesView.classList.remove("hidden");
+burstConfetti();
+});
+
+// ---------------- CONFETTI ----------------
+const canvas=document.getElementById("confettiCanvas");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+let pieces=[];
+function burstConfetti(){
+pieces=[];
+for(let i=0;i<150;i++){
+pieces.push({
+x:window.innerWidth/2,
+y:window.innerHeight/2,
+vx:(Math.random()*6-3),
+vy:(Math.random()*-8-3),
+g:0.2,
+size:4+Math.random()*4
+});
+}
+requestAnimationFrame(updateConfetti);
+}
+
+function updateConfetti(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+pieces.forEach(p=>{
+p.x+=p.vx;
+p.y+=p.vy;
+p.vy+=p.g;
+ctx.fillStyle="white";
+ctx.fillRect(p.x,p.y,p.size,p.size);
+});
+requestAnimationFrame(updateConfetti);
+}
+
+// ---------------- DOWNLOAD FUNCTIONS ----------------
+function downloadImage(width,height,filename){
+const img=document.getElementById("previewPhoto");
+
+const c=document.createElement("canvas");
+c.width=width;
+c.height=height;
+const g=c.getContext("2d");
+
+const bg=g.createLinearGradient(0,0,width,height);
+bg.addColorStop(0,"#ff2d55");
+bg.addColorStop(1,"#ffd1e8");
+g.fillStyle=bg;
+g.fillRect(0,0,width,height);
+
+const radius=width*0.3;
+const cx=width/2;
+const cy=height/2;
+
+g.save();
+g.beginPath();
+g.arc(cx,cy,radius,0,Math.PI*2);
+g.clip();
+
+const side=Math.min(img.naturalWidth,img.naturalHeight);
+let sx=(img.naturalWidth-side)/2;
+let sy=(img.naturalHeight-side)/2;
+
+sx+=side*0.14;
+sy+=side*(-0.07);
+
+sx=Math.max(0,Math.min(sx,img.naturalWidth-side));
+sy=Math.max(0,Math.min(sy,img.naturalHeight-side));
+
+g.drawImage(img,sx,sy,side,side,cx-radius,cy-radius,radius*2,radius*2);
+g.restore();
+
+const a=document.createElement("a");
+a.href=c.toDataURL("image/png");
+a.download=filename;
+a.click();
+}
+
+function downloadStory(){
+downloadImage(1080,1920,"valentine-story.png");
+}
+
+function downloadSquare(){
+downloadImage(1080,1080,"valentine-square.png");
+}
+
+</script>
+
+</body>
+</html>
