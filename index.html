@@ -9,7 +9,7 @@
     html, body {
       height: 100%;
       margin: 0;
-      overflow: hidden;            /* no sideways scroll / cutoff */
+      overflow: hidden;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       -webkit-text-size-adjust: 100%;
     }
@@ -19,14 +19,15 @@
       color: #fff;
     }
 
-    /* FULL SCREEN CENTER WRAPPER — bulletproof on laptop + phone */
+    /* FULL SCREEN CENTER WRAPPER — does NOT force yesView visible */
     #askView, #yesView{
       position: fixed;
       inset: 0;
-      display: grid;
       place-items: center;
       padding: 24px;
     }
+    #askView{ display: grid; }
+    #yesView{ display: none; } /* default hidden */
 
     .container{
       width: min(680px, 100%);
@@ -46,6 +47,12 @@
       text-shadow: 0 10px 30px rgba(0,0,0,0.18);
     }
 
+    .hint{
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: 0.88;
+    }
+
     /* Arena box for buttons (No moves inside this only) */
     .arena{
       position: relative;
@@ -56,6 +63,7 @@
       background: rgba(255,255,255,0.14);
       border: 1px dashed rgba(255,255,255,0.35);
       overflow: hidden;
+      pointer-events: auto;
     }
 
     button{
@@ -69,6 +77,7 @@
       touch-action: manipulation;
       box-shadow: 0 14px 30px rgba(0,0,0,0.18);
       transition: transform .12s ease;
+      pointer-events: auto;
     }
     button:active{ transform: scale(.98); }
 
@@ -76,27 +85,30 @@
       background:#ff2d55;
       color:#fff;
       position: absolute;
-      left: 50%;
+      left: 35%;
       top: 60px;
-      transform: translateX(-120px);
+      transform: translateX(-50%);
       animation: pulse 1.2s infinite;
+      z-index: 2;
     }
     @keyframes pulse{
-      0%,100%{ transform: translateX(-120px) scale(1); }
-      50%{ transform: translateX(-120px) scale(1.08); }
+      0%,100%{ transform: translateX(-50%) scale(1); }
+      50%{ transform: translateX(-50%) scale(1.08); }
     }
 
     #noBtn{
       position: absolute;
       background: rgba(0,0,0,0.92);
       color: #fff;
-      left: 50%;
+      left: 65%;
       top: 60px;
-      transform: translateX(20px);
+      transform: translateX(-50%);
       will-change: left, top, transform;
+      z-index: 3;
     }
 
-    .hidden{ display:none; }
+    /* show/hide helper */
+    .hidden{ display: none !important; }
 
     /* YES screen photo ring */
     .photoRing{
@@ -144,12 +156,6 @@
       border: 0;
     }
 
-    .hint{
-      margin-top: 10px;
-      font-size: 13px;
-      opacity: 0.88;
-    }
-
     canvas{
       position: fixed;
       inset: 0;
@@ -183,10 +189,8 @@
 
       <div class="photoRing">
         <div class="photoInner">
-          <!-- IMPORTANT: Replace PASTE_BASE64_HERE with your Base64 string -->
-          <img id="previewPhoto"
-               src="FullSizeRender.jpeg
-               alt="Our photo" />
+          <!-- Uses the exact filename in your repo -->
+          <img id="previewPhoto" src="FullSizeRender.jpeg" alt="Our photo" />
         </div>
       </div>
 
@@ -210,48 +214,43 @@
     const arena   = document.getElementById("arena");
     const imgEl   = document.getElementById("previewPhoto");
 
-    // ---------- "NO" MOVES INSIDE ARENA ONLY (prevents cutoff) ----------
+    // ---------- NO MOVES INSIDE ARENA ONLY ----------
     function moveNo(clientX, clientY){
       const r = arena.getBoundingClientRect();
       const b = noBtn.getBoundingClientRect();
 
-      const maxX = r.width  - b.width;
-      const maxY = r.height - b.height;
+      const maxX = Math.max(0, r.width  - b.width);
+      const maxY = Math.max(0, r.height - b.height);
 
-      // random spot inside arena
-      let x = Math.random() * Math.max(0, maxX);
-      let y = Math.random() * Math.max(0, maxY);
+      let x = Math.random() * maxX;
+      let y = Math.random() * maxY;
 
-      // optional: if pointer is close, move farther away
+      // keep it away from cursor/finger
       if (typeof clientX === "number" && typeof clientY === "number") {
         const px = clientX - r.left;
         const py = clientY - r.top;
         const cx = x + b.width/2;
         const cy = y + b.height/2;
-        const dist = Math.hypot(px - cx, py - cy);
-        if (dist < 120) {
-          x = Math.random() * Math.max(0, maxX);
-          y = Math.random() * Math.max(0, maxY);
+        if (Math.hypot(px - cx, py - cy) < 120) {
+          x = Math.random() * maxX;
+          y = Math.random() * maxY;
         }
       }
 
       noBtn.style.left = x + "px";
       noBtn.style.top  = y + "px";
-      noBtn.style.transform = "none"; // remove translateX once we start moving
+      noBtn.style.transform = "none";
     }
 
-    // Desktop
     noBtn.addEventListener("mouseenter", (e) => moveNo(e.clientX, e.clientY));
     noBtn.addEventListener("mousemove",  (e) => moveNo(e.clientX, e.clientY));
     noBtn.addEventListener("mousedown",  (e) => { e.preventDefault(); moveNo(e.clientX, e.clientY); });
 
-    // Mobile
     noBtn.addEventListener("touchstart", (e) => {
       const t = e.touches[0];
       moveNo(t.clientX, t.clientY);
     }, { passive: true });
 
-    // Start position inside arena after load
     window.addEventListener("load", () => {
       const r = arena.getBoundingClientRect();
       moveNo(r.left + r.width/2, r.top + r.height/2);
@@ -261,14 +260,14 @@
     yesBtn.addEventListener("click", () => {
       askView.classList.add("hidden");
       yesView.classList.remove("hidden");
+      yesView.style.display = "grid";  // show yes view
       burstConfetti();
-      // optional: attempt auto-download story after YES (some browsers block)
-      setTimeout(() => { try { downloadStory(); } catch {} }, 450);
     });
 
     // ---------- CONFETTI ----------
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
+
     function resize(){
       canvas.width  = Math.floor(window.innerWidth  * devicePixelRatio);
       canvas.height = Math.floor(window.innerHeight * devicePixelRatio);
@@ -332,16 +331,15 @@
       g.closePath();
       g.clip();
 
-      // square crop (cover-fit) with tuned offsets
-      const side = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
       const iw = img.naturalWidth || img.width;
       const ih = img.naturalHeight || img.height;
+      const side = Math.min(iw, ih);
 
       let sx = (iw - side) / 2;
       let sy = (ih - side) / 2;
 
-      sx += side * offsetX;     // + => shift crop right
-      sy += side * offsetY;     // - => shift crop up
+      sx += side * offsetX;
+      sy += side * offsetY;
 
       sx = Math.max(0, Math.min(sx, iw - side));
       sy = Math.max(0, Math.min(sy, ih - side));
@@ -363,25 +361,21 @@
       g.fillStyle = bg;
       g.fillRect(0,0,width,height);
 
-      // Title
       g.fillStyle = "rgba(255,255,255,0.97)";
       g.textAlign = "center";
       g.font = `900 ${Math.round(width*0.065)}px system-ui`;
       g.fillText("💘 Valentine Invite 💘", width/2, Math.round(height*0.14));
 
-      // Photo circle
       const radius = Math.round(width * 0.28);
       const cx = width/2;
       const cy = Math.round(height * 0.48);
 
-      // ring
       g.strokeStyle = "rgba(255,255,255,0.85)";
       g.lineWidth = Math.round(width * 0.015);
       g.beginPath(); g.arc(cx, cy, radius + Math.round(width*0.018), 0, Math.PI*2); g.stroke();
 
       drawCircularImage(g, imgEl, cx, cy, radius, 0.14, -0.07);
 
-      // Footer
       g.fillStyle = "rgba(255,255,255,0.96)";
       g.font = `900 ${Math.round(width*0.050)}px system-ui`;
       g.fillText("You clicked YES 💖", width/2, Math.round(height*0.83));
@@ -400,6 +394,3 @@
   </script>
 </body>
 </html>
-
-
-
