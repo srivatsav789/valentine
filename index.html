@@ -20,8 +20,12 @@ color:white;
 
 .hidden{display:none;}
 
-.container{
-position:relative;
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
 }
 
 button{
@@ -46,9 +50,11 @@ animation:pulse 1.2s infinite;
 }
 
 #noBtn{
-position:absolute;
-background:black;
-color:white;
+  position: absolute;
+  left: 55%;
+  top: 70px;
+}
+
 }
 
 .photoRing{
@@ -121,7 +127,7 @@ body {
 
 /* If you have an arena/buttons area, keep it inside too */
 .arena, .buttons {
-  max-width: 100% !important;
+max-width: 100% !important;
 }
 </style>
 </head>
@@ -272,5 +278,6 @@ downloadImage(1080,1080,"valentine-square.png");
 
 </body>
 </html>
+
 
 
