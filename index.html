@@ -86,6 +86,43 @@ background:white;
 color:#ff2d55;
 margin-top:15px;
 }
+/* === Anti-cutoff hard fix === */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden !important;
+}
+
+body {
+  /* keep your gradient if you have one; this just fixes layout */
+  min-height: 100vh;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  /* KEY: prevents content touching edges / getting clipped */
+  padding: 20px !important;
+
+  /* avoids iOS/Chrome text resize quirks */
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Center the main blocks and force them to stay inside screen */
+#askView, #yesView, .container, .card {
+  width: min(720px, calc(100vw - 40px)) !important;
+  max-width: calc(100vw - 40px) !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+}
+
+/* If you have an arena/buttons area, keep it inside too */
+.arena, .buttons {
+  max-width: 100% !important;
+}
 </style>
 </head>
 
@@ -235,3 +272,4 @@ downloadImage(1080,1080,"valentine-square.png");
 
 </body>
 </html>
+
