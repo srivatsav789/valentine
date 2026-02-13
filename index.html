@@ -1,283 +1,402 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine 💘</title>
-* { max-width: 100% !important; }
-<style>
-body{
-margin:0;
-font-family:system-ui;
-text-align:center;
-height:100vh;
-overflow:hidden;
-background:linear-gradient(135deg,#ff4d7d,#ff86c8,#ffd1e8);
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Valentine 💘</title>
 
-.hidden{display:none;}
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;            /* no sideways scroll / cutoff */
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+    }
 
-.container {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-}
+    body{
+      background: linear-gradient(135deg,#ff4d7d,#ff86c8,#ffd1e8);
+      color: #fff;
+    }
 
-button{
-padding:14px 24px;
-font-size:18px;
-border-radius:999px;
-border:none;
-margin:10px;
-font-weight:bold;
-cursor:pointer;
-}
+    /* FULL SCREEN CENTER WRAPPER — bulletproof on laptop + phone */
+    #askView, #yesView{
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
 
-#yesBtn{
-background:#ff2d55;
-color:white;
-animation:pulse 1.2s infinite;
-}
+    .container{
+      width: min(680px, 100%);
+      text-align: center;
+    }
 
-@keyframes pulse{
-0%,100%{transform:scale(1);}
-50%{transform:scale(1.1);}
-}
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(26px, 4.6vw, 44px);
+      text-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
 
-#noBtn{
-  position: absolute;
-  left: 55%;
-  top: 70px;
-}
+    .sub{
+      margin: 0 0 16px;
+      opacity: 0.92;
+      font-size: 16px;
+      text-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    }
 
-}
+    /* Arena box for buttons (No moves inside this only) */
+    .arena{
+      position: relative;
+      width: min(520px, 100%);
+      height: 170px;
+      margin: 18px auto 0;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.14);
+      border: 1px dashed rgba(255,255,255,0.35);
+      overflow: hidden;
+    }
 
-.photoRing{
-width:220px;
-height:220px;
-border-radius:50%;
-margin:20px auto;
-background:conic-gradient(#fff,#ff2d55,#ff86c8,#fff);
-display:flex;
-align-items:center;
-justify-content:center;
-animation:spin 3s linear infinite;
-}
+    button{
+      padding: 14px 24px;
+      font-size: 18px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 900;
+      cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+      transition: transform .12s ease;
+    }
+    button:active{ transform: scale(.98); }
 
-@keyframes spin{
-to{transform:rotate(360deg);}
-}
+    #yesBtn{
+      background:#ff2d55;
+      color:#fff;
+      position: absolute;
+      left: 50%;
+      top: 60px;
+      transform: translateX(-120px);
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse{
+      0%,100%{ transform: translateX(-120px) scale(1); }
+      50%{ transform: translateX(-120px) scale(1.08); }
+    }
 
-.photoInner{
-width:200px;
-height:200px;
-border-radius:50%;
-overflow:hidden;
-}
+    #noBtn{
+      position: absolute;
+      background: rgba(0,0,0,0.92);
+      color: #fff;
+      left: 50%;
+      top: 60px;
+      transform: translateX(20px);
+      will-change: left, top, transform;
+    }
 
-#previewPhoto{
-width:100%;
-height:100%;
-object-fit:cover;
-object-position:65% 35%;
-}
+    .hidden{ display:none; }
 
-.downloadBtn{
-background:white;
-color:#ff2d55;
-margin-top:15px;
-}
-/* === Anti-cutoff hard fix === */
-html, body {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden !important;
-}
+    /* YES screen photo ring */
+    .photoRing{
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      margin: 18px auto 8px;
+      background: conic-gradient(#fff,#ff2d55,#ff86c8,#ffd1e8,#fff);
+      display: grid;
+      place-items: center;
+      animation: spin 3.2s linear infinite;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
 
-body {
-  /* keep your gradient if you have one; this just fixes layout */
-  min-height: 100vh;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
+    .photoInner{
+      width: 218px;
+      height: 218px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: rgba(255,255,255,0.9);
+      border: 3px solid rgba(255,255,255,0.7);
+    }
 
-  /* KEY: prevents content touching edges / getting clipped */
-  padding: 20px !important;
+    #previewPhoto{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      /* tuned for your photo (slightly right + up) */
+      object-position: 65% 35%;
+      display:block;
+    }
 
-  /* avoids iOS/Chrome text resize quirks */
-  -webkit-text-size-adjust: 100%;
-}
+    .actions{
+      margin-top: 16px;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
 
-/* Center the main blocks and force them to stay inside screen */
-#askView, #yesView, .container, .card {
-  width: min(720px, calc(100vw - 40px)) !important;
-  max-width: calc(100vw - 40px) !important;
-  margin: 0 auto !important;
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
-}
+    .downloadBtn{
+      background: #fff;
+      color: #ff2d55;
+      border: 0;
+    }
 
-/* If you have an arena/buttons area, keep it inside too */
-.arena, .buttons {
-max-width: 100% !important;
-}
-</style>
+    .hint{
+      margin-top: 10px;
+      font-size: 13px;
+      opacity: 0.88;
+    }
+
+    canvas{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+  </style>
 </head>
 
 <body>
 
-<div id="askView" class="container">
-<h1>Will you be my Valentine? 💘</h1>
-<div>
-<button id="yesBtn">Yes 💖</button>
-<button id="noBtn">No 🙃</button>
-</div>
-</div>
+  <!-- ASK VIEW -->
+  <div id="askView">
+    <div class="container">
+      <h1>Will you be my Valentine? 💘</h1>
+      <div class="sub">Try tapping “No”… if you can 😏</div>
 
-<div id="yesView" class="hidden">
-<h1>It’s a date!!! 🥰💞🎉</h1>
+      <div class="arena" id="arena">
+        <button id="yesBtn" type="button">Yes 💖</button>
+        <button id="noBtn" type="button">No 🙃</button>
+      </div>
 
-<div class="photoRing">
-<div class="photoInner">
-<img id="previewPhoto"
-src="data:image/jpeg;base64,PASTE_BASE64_HERE">
-</div>
-</div>
+      <div class="hint">Tip: this layout won’t cut off on laptops/phones.</div>
+    </div>
+  </div>
 
-<button class="downloadBtn" onclick="downloadStory()">Download Story 📱</button>
-<button class="downloadBtn" onclick="downloadSquare()">Download Square 🟪</button>
-</div>
+  <!-- YES VIEW -->
+  <div id="yesView" class="hidden">
+    <div class="container">
+      <h1>It’s a date!!! 🥰💞🎉</h1>
 
-<canvas id="confettiCanvas"></canvas>
+      <div class="photoRing">
+        <div class="photoInner">
+          <!-- IMPORTANT: Replace PASTE_BASE64_HERE with your Base64 string -->
+          <img id="previewPhoto"
+               src="data:image/jpeg;base64,PASTE_BASE64_HERE"
+               alt="Our photo" />
+        </div>
+      </div>
 
-<script>
+      <div class="actions">
+        <button class="downloadBtn" id="downloadStoryBtn" type="button">Download Story 📱</button>
+        <button class="downloadBtn" id="downloadSquareBtn" type="button">Download Square 🟪</button>
+      </div>
 
-// ---------------- NO BUTTON DODGE ----------------
-const noBtn=document.getElementById("noBtn");
+      <div class="hint">If Safari blocks auto-download, tap the buttons above.</div>
+    </div>
+  </div>
 
-function moveNo(e){
-const x=Math.random()*(window.innerWidth-100);
-const y=Math.random()*(window.innerHeight-50);
-noBtn.style.left=x+"px";
-noBtn.style.top=y+"px";
-}
+  <canvas id="confettiCanvas"></canvas>
 
-noBtn.addEventListener("mouseover",moveNo);
-noBtn.addEventListener("touchstart",moveNo);
+  <script>
+    // ---------- DOM ----------
+    const noBtn   = document.getElementById("noBtn");
+    const yesBtn  = document.getElementById("yesBtn");
+    const askView = document.getElementById("askView");
+    const yesView = document.getElementById("yesView");
+    const arena   = document.getElementById("arena");
+    const imgEl   = document.getElementById("previewPhoto");
 
-// ---------------- YES CLICK ----------------
-const yesBtn=document.getElementById("yesBtn");
-const askView=document.getElementById("askView");
-const yesView=document.getElementById("yesView");
+    // ---------- "NO" MOVES INSIDE ARENA ONLY (prevents cutoff) ----------
+    function moveNo(clientX, clientY){
+      const r = arena.getBoundingClientRect();
+      const b = noBtn.getBoundingClientRect();
 
-yesBtn.addEventListener("click",()=>{
-askView.classList.add("hidden");
-yesView.classList.remove("hidden");
-burstConfetti();
-});
+      const maxX = r.width  - b.width;
+      const maxY = r.height - b.height;
 
-// ---------------- CONFETTI ----------------
-const canvas=document.getElementById("confettiCanvas");
-const ctx=canvas.getContext("2d");
+      // random spot inside arena
+      let x = Math.random() * Math.max(0, maxX);
+      let y = Math.random() * Math.max(0, maxY);
 
-function resize(){
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-}
-resize();
-window.addEventListener("resize",resize);
+      // optional: if pointer is close, move farther away
+      if (typeof clientX === "number" && typeof clientY === "number") {
+        const px = clientX - r.left;
+        const py = clientY - r.top;
+        const cx = x + b.width/2;
+        const cy = y + b.height/2;
+        const dist = Math.hypot(px - cx, py - cy);
+        if (dist < 120) {
+          x = Math.random() * Math.max(0, maxX);
+          y = Math.random() * Math.max(0, maxY);
+        }
+      }
 
-let pieces=[];
-function burstConfetti(){
-pieces=[];
-for(let i=0;i<150;i++){
-pieces.push({
-x:window.innerWidth/2,
-y:window.innerHeight/2,
-vx:(Math.random()*6-3),
-vy:(Math.random()*-8-3),
-g:0.2,
-size:4+Math.random()*4
-});
-}
-requestAnimationFrame(updateConfetti);
-}
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+      noBtn.style.transform = "none"; // remove translateX once we start moving
+    }
 
-function updateConfetti(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-pieces.forEach(p=>{
-p.x+=p.vx;
-p.y+=p.vy;
-p.vy+=p.g;
-ctx.fillStyle="white";
-ctx.fillRect(p.x,p.y,p.size,p.size);
-});
-requestAnimationFrame(updateConfetti);
-}
+    // Desktop
+    noBtn.addEventListener("mouseenter", (e) => moveNo(e.clientX, e.clientY));
+    noBtn.addEventListener("mousemove",  (e) => moveNo(e.clientX, e.clientY));
+    noBtn.addEventListener("mousedown",  (e) => { e.preventDefault(); moveNo(e.clientX, e.clientY); });
 
-// ---------------- DOWNLOAD FUNCTIONS ----------------
-function downloadImage(width,height,filename){
-const img=document.getElementById("previewPhoto");
+    // Mobile
+    noBtn.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      moveNo(t.clientX, t.clientY);
+    }, { passive: true });
 
-const c=document.createElement("canvas");
-c.width=width;
-c.height=height;
-const g=c.getContext("2d");
+    // Start position inside arena after load
+    window.addEventListener("load", () => {
+      const r = arena.getBoundingClientRect();
+      moveNo(r.left + r.width/2, r.top + r.height/2);
+    });
 
-const bg=g.createLinearGradient(0,0,width,height);
-bg.addColorStop(0,"#ff2d55");
-bg.addColorStop(1,"#ffd1e8");
-g.fillStyle=bg;
-g.fillRect(0,0,width,height);
+    // ---------- YES CLICK ----------
+    yesBtn.addEventListener("click", () => {
+      askView.classList.add("hidden");
+      yesView.classList.remove("hidden");
+      burstConfetti();
+      // optional: attempt auto-download story after YES (some browsers block)
+      setTimeout(() => { try { downloadStory(); } catch {} }, 450);
+    });
 
-const radius=width*0.3;
-const cx=width/2;
-const cy=height/2;
+    // ---------- CONFETTI ----------
+    const canvas = document.getElementById("confettiCanvas");
+    const ctx = canvas.getContext("2d");
+    function resize(){
+      canvas.width  = Math.floor(window.innerWidth  * devicePixelRatio);
+      canvas.height = Math.floor(window.innerHeight * devicePixelRatio);
+      canvas.style.width  = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }
+    window.addEventListener("resize", resize);
+    resize();
 
-g.save();
-g.beginPath();
-g.arc(cx,cy,radius,0,Math.PI*2);
-g.clip();
+    let pieces = [];
+    let confettiOn = false;
 
-const side=Math.min(img.naturalWidth,img.naturalHeight);
-let sx=(img.naturalWidth-side)/2;
-let sy=(img.naturalHeight-side)/2;
+    function burstConfetti(){
+      pieces = [];
+      const colors = ["#ffffff","#ff2d55","#ff86c8","#ffd1e8","#111827","#ffe66d","#7dd3fc"];
+      for(let i=0;i<170;i++){
+        pieces.push({
+          x: window.innerWidth/2 + (Math.random()*120-60),
+          y: window.innerHeight/2 + (Math.random()*40-20),
+          vx:(Math.random()*7-3.5),
+          vy:(Math.random()*-10-4),
+          g:0.22 + Math.random()*0.10,
+          s:3 + Math.random()*4,
+          a:Math.random()*Math.PI*2,
+          va:(Math.random()*0.22-0.11),
+          c:colors[Math.floor(Math.random()*colors.length)],
+          life: 140 + Math.random()*70
+        });
+      }
+      confettiOn = true;
+      requestAnimationFrame(drawConfetti);
+    }
 
-sx+=side*0.14;
-sy+=side*(-0.07);
+    function drawConfetti(){
+      if(!confettiOn) return;
+      ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
 
-sx=Math.max(0,Math.min(sx,img.naturalWidth-side));
-sy=Math.max(0,Math.min(sy,img.naturalHeight-side));
+      for(const p of pieces){
+        p.x += p.vx; p.y += p.vy; p.vy += p.g; p.a += p.va; p.life -= 1;
 
-g.drawImage(img,sx,sy,side,side,cx-radius,cy-radius,radius*2,radius*2);
-g.restore();
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.a);
+        ctx.fillStyle = p.c;
+        ctx.globalAlpha = Math.max(0, Math.min(1, p.life/200));
+        ctx.fillRect(-p.s, -p.s, p.s*2.2, p.s*1.4);
+        ctx.restore();
+      }
+      pieces = pieces.filter(p => p.life > 0 && p.y < window.innerHeight + 60);
+      if(pieces.length) requestAnimationFrame(drawConfetti);
+      else { confettiOn = false; ctx.clearRect(0,0,window.innerWidth, window.innerHeight); }
+    }
 
-const a=document.createElement("a");
-a.href=c.toDataURL("image/png");
-a.download=filename;
-a.click();
-}
+    // ---------- DOWNLOAD (Story + Square) ----------
+    function drawCircularImage(g, img, cx, cy, radius, offsetX = 0.14, offsetY = -0.07){
+      g.save();
+      g.beginPath();
+      g.arc(cx, cy, radius, 0, Math.PI*2);
+      g.closePath();
+      g.clip();
 
-function downloadStory(){
-downloadImage(1080,1920,"valentine-story.png");
-}
+      // square crop (cover-fit) with tuned offsets
+      const side = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
+      const iw = img.naturalWidth || img.width;
+      const ih = img.naturalHeight || img.height;
 
-function downloadSquare(){
-downloadImage(1080,1080,"valentine-square.png");
-}
+      let sx = (iw - side) / 2;
+      let sy = (ih - side) / 2;
 
-</script>
+      sx += side * offsetX;     // + => shift crop right
+      sy += side * offsetY;     // - => shift crop up
 
+      sx = Math.max(0, Math.min(sx, iw - side));
+      sy = Math.max(0, Math.min(sy, ih - side));
+
+      const d = radius * 2;
+      g.drawImage(img, sx, sy, side, side, cx - radius, cy - radius, d, d);
+      g.restore();
+    }
+
+    function downloadImage(width, height, filename){
+      const c = document.createElement("canvas");
+      c.width = width; c.height = height;
+      const g = c.getContext("2d");
+
+      const bg = g.createLinearGradient(0,0,width,height);
+      bg.addColorStop(0,"#ff2d55");
+      bg.addColorStop(0.45,"#ff86c8");
+      bg.addColorStop(1,"#ffd1e8");
+      g.fillStyle = bg;
+      g.fillRect(0,0,width,height);
+
+      // Title
+      g.fillStyle = "rgba(255,255,255,0.97)";
+      g.textAlign = "center";
+      g.font = `900 ${Math.round(width*0.065)}px system-ui`;
+      g.fillText("💘 Valentine Invite 💘", width/2, Math.round(height*0.14));
+
+      // Photo circle
+      const radius = Math.round(width * 0.28);
+      const cx = width/2;
+      const cy = Math.round(height * 0.48);
+
+      // ring
+      g.strokeStyle = "rgba(255,255,255,0.85)";
+      g.lineWidth = Math.round(width * 0.015);
+      g.beginPath(); g.arc(cx, cy, radius + Math.round(width*0.018), 0, Math.PI*2); g.stroke();
+
+      drawCircularImage(g, imgEl, cx, cy, radius, 0.14, -0.07);
+
+      // Footer
+      g.fillStyle = "rgba(255,255,255,0.96)";
+      g.font = `900 ${Math.round(width*0.050)}px system-ui`;
+      g.fillText("You clicked YES 💖", width/2, Math.round(height*0.83));
+
+      const a = document.createElement("a");
+      a.href = c.toDataURL("image/png");
+      a.download = filename;
+      a.click();
+    }
+
+    function downloadStory(){  downloadImage(1080,1920,"valentine-story.png"); }
+    function downloadSquare(){ downloadImage(1080,1080,"valentine-square.png"); }
+
+    document.getElementById("downloadStoryBtn").addEventListener("click", downloadStory);
+    document.getElementById("downloadSquareBtn").addEventListener("click", downloadSquare);
+  </script>
 </body>
 </html>
-
-
-
