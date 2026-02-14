@@ -1,231 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>My Forever Valentine 💘</title>
 
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: "Georgia", serif;
-  background: linear-gradient(135deg, #ff5f9e, #ff85c1, #ffc1dd);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-}
+  :root{
+    --pink1:#ff5f9e;
+    --pink2:#ff85c1;
+    --pink3:#ffc1dd;
+    --shadow: rgba(0,0,0,0.22);
+  }
 
-/* Soft heartbeat glow */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 60%);
-  animation: pulse 4s ease-in-out infinite;
-  z-index: 0;
-}
+  html, body{
+    height:100%;
+    margin:0;
+    overflow:hidden;
+    font-family: "Georgia", serif;
+    color:#fff;
+  }
 
-@keyframes pulse {
-  0%,100% { transform: scale(1); opacity: .4; }
-  50% { transform: scale(1.05); opacity: .7; }
-}
+  body{
+    background: linear-gradient(135deg, var(--pink1), var(--pink2), var(--pink3));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    position:relative;
+  }
 
-.container {
-  position: relative;
-  z-index: 2;
-  max-width: 650px;
-  padding: 20px;
-}
+  /* Luxury soft glow + heartbeat pulse */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:-20%;
+    background:
+      radial-gradient(circle at 30% 35%, rgba(255,255,255,0.22), transparent 55%),
+      radial-gradient(circle at 70% 65%, rgba(255,255,255,0.16), transparent 58%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.12), transparent 62%);
+    filter: blur(10px);
+    animation: pulse 4.6s ease-in-out infinite;
+    z-index:0;
+    pointer-events:none;
+  }
+  @keyframes pulse{
+    0%,100%{ transform: scale(1); opacity:.45; }
+    50%{ transform: scale(1.06); opacity:.75; }
+  }
 
-/* ASK VIEW */
-#askView h1 {
-  font-size: 2.4rem;
-  margin-bottom: 30px;
-}
+  /* Premium “soft shimmer” overlay */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:-40%;
+    background: linear-gradient(120deg,
+      transparent 20%,
+      rgba(255,255,255,0.08) 35%,
+      rgba(255,255,255,0.16) 45%,
+      rgba(255,255,255,0.08) 55%,
+      transparent 70%);
+    transform: translateX(-40%);
+    animation: shimmer 8.5s ease-in-out infinite;
+    z-index:0;
+    pointer-events:none;
+    mix-blend-mode: screen;
+  }
+  @keyframes shimmer{
+    0%{ transform: translateX(-45%) rotate(2deg); opacity:.35; }
+    50%{ transform: translateX(20%) rotate(2deg); opacity:.55; }
+    100%{ transform: translateX(85%) rotate(2deg); opacity:.35; }
+  }
 
-.arena {
-  position: relative;
-  height: 160px;
-}
+  /* Layers */
+  #heartsLayer{ position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+  #sparklesLayer{ position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+  #petalsLayer{ position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
 
-button {
-  padding: 12px 26px;
-  border: none;
-  border-radius: 30px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
+  /* Views */
+  .container{
+    position:relative;
+    z-index:2;
+    width:min(680px, 92vw);
+    padding: 22px 18px;
+  }
+  .hidden{ display:none !important; }
 
-#yesBtn {
-  background: white;
-  color: #ff4d88;
-  font-weight: bold;
-  margin-right: 20px;
-}
+  h1{
+    margin:0 0 10px;
+    font-size: clamp(28px, 4.4vw, 48px);
+    text-shadow: 0 14px 30px rgba(0,0,0,0.20);
+    letter-spacing: .3px;
+  }
 
-#yesBtn:hover {
-  transform: scale(1.05);
-}
+  .subHint{
+    margin: 6px 0 22px;
+    font-size: clamp(15px, 2.0vw, 18px);
+    font-style: italic;
+    opacity: .88;
+    text-shadow: 0 10px 20px rgba(0,0,0,0.14);
+    animation: hintIn 900ms ease-out both;
+    animation-delay: 650ms;
+  }
+  @keyframes hintIn{
+    from{ opacity:0; transform: translateY(6px); }
+    to{ opacity:.88; transform: translateY(0); }
+  }
 
-#noBtn {
-  background: black;
-  color: white;
-  position: absolute;
-}
+  /* Arena */
+  .arena{
+    position:relative;
+    height: 170px;
+    width: min(520px, 100%);
+    margin: 0 auto;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.14);
+    border: 1px dashed rgba(255,255,255,0.35);
+    backdrop-filter: blur(3px);
+    box-shadow: 0 22px 45px rgba(0,0,0,0.12);
+    overflow:hidden;
+  }
 
-.hidden { display: none; }
+  button{
+    padding: 12px 26px;
+    border:none;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor:pointer;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.18);
+    transition: transform .14s ease, filter .14s ease;
+    user-select:none;
+    touch-action: manipulation;
+  }
+  button:active{ transform: scale(.98); }
 
-/* YES VIEW */
-#yesView h2 {
-  font-size: 1.7rem;
-  line-height: 1.7;
-  font-weight: 500;
-  margin-bottom: 35px;
-  text-shadow: 0 3px 8px rgba(0,0,0,0.25);
-}
+  #yesBtn{
+    background: rgba(255,255,255,0.98);
+    color:#ff2d55;
+    position:absolute;
+    left: 36%;
+    top: 64px;
+    transform: translateX(-50%);
+    animation: yesPulse 1.35s ease-in-out infinite;
+  }
+  #yesBtn:hover{ filter: brightness(1.03); }
 
-/* Photo styling */
-.photoRing {
-  width: 220px;
-  height: 220px;
-  margin: auto;
-  border-radius: 50%;
-  padding: 8px;
-  background: linear-gradient(45deg, #fff, #ffd6eb);
-  box-shadow: 0 0 30px rgba(255,255,255,0.6);
-  animation: fadeIn 1.2s ease forwards;
-}
+  @keyframes yesPulse{
+    0%,100%{ transform: translateX(-50%) scale(1); }
+    50%{ transform: translateX(-50%) scale(1.06); }
+  }
 
-.photoRing img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-}
+  #noBtn{
+    position:absolute;
+    left: 64%;
+    top: 64px;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.92);
+    color:#fff;
+    will-change: left, top, transform;
+  }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(.85); }
-  to { opacity: 1; transform: scale(1); }
-}
+  /* YES VIEW MESSAGE */
+  #yesView h2{
+    margin: 0 0 22px;
+    font-size: clamp(18px, 2.6vw, 26px);
+    line-height: 1.65;
+    font-weight: 500;
+    text-shadow: 0 10px 22px rgba(0,0,0,0.20);
+  }
+  #yesView h2 strong{
+    font-weight: 800;
+  }
 
-/* Falling hearts */
-#heartsLayer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
+  /* Photo + premium gold shimmer ring */
+  .photoWrap{
+    width: 240px;
+    height: 240px;
+    margin: 18px auto 0;
+    border-radius: 50%;
+    padding: 9px;
+    position: relative;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,255,255,0.25));
+    box-shadow: 0 24px 55px rgba(0,0,0,0.18);
+    animation: popIn 700ms ease-out both;
+  }
+  @keyframes popIn{
+    from{ opacity:0; transform: scale(.92); }
+    to{ opacity:1; transform: scale(1); }
+  }
 
-.heart {
-  position: absolute;
-  top: -10vh;
-  font-size: 20px;
-  animation: fall linear forwards;
-}
+  /* Gold shimmer ring (slow, classy) */
+  .photoWrap::before{
+    content:"";
+    position:absolute;
+    inset:-4px;
+    border-radius:50%;
+    padding: 4px;
+    background: conic-gradient(
+      from 180deg,
+      rgba(255,215,150,0.15),
+      rgba(255,255,255,0.75),
+      rgba(255,215,150,0.22),
+      rgba(255,255,255,0.75),
+      rgba(255,215,150,0.15)
+    );
+    -webkit-mask:
+      radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
+    mask:
+      radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 9px));
+    filter: blur(.2px);
+    animation: ringShimmer 7.5s linear infinite;
+    opacity: .95;
+    pointer-events:none;
+  }
+  @keyframes ringShimmer{
+    to{ transform: rotate(360deg); }
+  }
 
-@keyframes fall {
-  to { transform: translateY(110vh); }
-}
+  .photoInner{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    overflow:hidden;
+    background: rgba(255,255,255,0.95);
+    border: 3px solid rgba(255,255,255,0.70);
+  }
+  #previewPhoto{
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    object-position: 65% 35%;
+    display:block;
+  }
 
-/* Sparkles */
-.sparkle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-  animation: twinkle 3s infinite;
-}
+  /* Tap-the-photo surprise hint */
+  .tapHint{
+    margin-top: 14px;
+    font-size: 13px;
+    opacity: .78;
+    text-shadow: 0 10px 22px rgba(0,0,0,0.16);
+  }
 
-@keyframes twinkle {
-  0%,100% { opacity: 0; }
-  50% { opacity: 1; }
-}
+  /* Surprise “glow reveal” overlay */
+  #surpriseGlow{
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(255,255,255,0.55), transparent 55%),
+      radial-gradient(circle at 40% 60%, rgba(255,200,220,0.35), transparent 60%),
+      radial-gradient(circle at 60% 60%, rgba(255,240,210,0.25), transparent 65%);
+    filter: blur(6px);
+    transition: opacity 600ms ease;
+  }
+  #surpriseGlow.on{ opacity: 1; }
 
+  /* Confetti canvas */
+  canvas{
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    pointer-events:none;
+  }
+
+  /* A “night/luxury” toggle button (optional but premium) */
+  .modeToggle{
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 3;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.22);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+  }
+
+  /* Night mode (luxury) */
+  body.night{
+    background: radial-gradient(circle at 20% 10%, #4d1b3f, transparent 60%),
+                radial-gradient(circle at 80% 20%, #2a1030, transparent 55%),
+                linear-gradient(135deg, #140a1a, #2a1030, #4d1b3f);
+  }
+  body.night::before{
+    opacity: .55;
+  }
+  body.night::after{
+    opacity: .28;
+  }
+  body.night #yesBtn{ color:#ff5aa5; }
+  body.night .arena{ background: rgba(255,255,255,0.10); }
+  body.night .modeToggle{ background: rgba(255,255,255,0.14); }
+
+  /* Reduced motion respects user settings */
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
+
 <body>
+  <button class="modeToggle" id="modeToggle" type="button">🌙 Night mode</button>
 
-<div id="heartsLayer"></div>
+  <div id="heartsLayer" aria-hidden="true"></div>
+  <div id="sparklesLayer" aria-hidden="true"></div>
+  <div id="petalsLayer" aria-hidden="true"></div>
+  <div id="surpriseGlow" aria-hidden="true"></div>
 
-<!-- ASK VIEW -->
-<div id="askView" class="container">
-  <h1>Will you be my Valentine? 💘</h1>
-  <div class="arena" id="arena">
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 😏</button>
+  <!-- ASK VIEW -->
+  <div id="askView" class="container">
+    <h1>Will you be my Valentine? 💘</h1>
+    <div class="subHint">Try clicking “No”… if you can 😉</div>
+
+    <div class="arena" id="arena">
+      <button id="yesBtn" type="button">Yes 💖</button>
+      <button id="noBtn" type="button">No 😏</button>
+    </div>
   </div>
-</div>
 
-<!-- YES VIEW -->
-<div id="yesView" class="container hidden">
-  <h2>
-    Thank you love 💞<br><br>
-    I will always be the smile on your face<br>
-    and the trust in your heart.<br><br>
-    <strong>My forever Valentine. 💖</strong>
-  </h2>
+  <!-- YES VIEW -->
+  <div id="yesView" class="container hidden">
+    <h2>
+      Thank you love 💞<br><br>
+      I will always be the smile on your face<br>
+      and the trust in your heart.<br><br>
+      <strong>My forever Valentine. 💖</strong>
+    </h2>
 
-  <div class="photoRing">
-    <img src="FullSizeRender.jpeg" alt="Our photo">
+    <div class="photoWrap">
+      <div class="photoInner">
+        <img id="previewPhoto" src="FullSizeRender.jpeg" alt="Our photo" />
+      </div>
+    </div>
+
+    <div class="tapHint">✨ Tap the photo for a surprise ✨</div>
   </div>
-</div>
+
+  <canvas id="confettiCanvas"></canvas>
 
 <script>
+  // ---------- DOM ----------
+  const noBtn   = document.getElementById("noBtn");
+  const yesBtn  = document.getElementById("yesBtn");
+  const askView = document.getElementById("askView");
+  const yesView = document.getElementById("yesView");
+  const arena   = document.getElementById("arena");
+  const photo   = document.getElementById("previewPhoto");
+  const glow    = document.getElementById("surpriseGlow");
+  const modeToggle = document.getElementById("modeToggle");
 
-/* YES CLICK */
-document.getElementById("yesBtn").onclick = function(){
-  document.getElementById("askView").classList.add("hidden");
-  document.getElementById("yesView").classList.remove("hidden");
-};
+  // ---------- NO MOVES INSIDE ARENA (desktop + mobile) ----------
+  function moveNo(clientX, clientY){
+    const r = arena.getBoundingClientRect();
+    const b = noBtn.getBoundingClientRect();
 
-/* NO BUTTON MOVE */
-const noBtn = document.getElementById("noBtn");
-const arena = document.getElementById("arena");
+    const maxX = Math.max(0, r.width  - b.width);
+    const maxY = Math.max(0, r.height - b.height);
 
-function moveNo(){
-  const maxX = arena.clientWidth - noBtn.clientWidth;
-  const maxY = arena.clientHeight - noBtn.clientHeight;
-  const randX = Math.random() * maxX;
-  const randY = Math.random() * maxY;
-  noBtn.style.left = randX + "px";
-  noBtn.style.top = randY + "px";
-}
+    let x = Math.random() * maxX;
+    let y = Math.random() * maxY;
 
-noBtn.addEventListener("mouseover", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
+    // avoid pointer if we have it
+    if (typeof clientX === "number" && typeof clientY === "number"){
+      const px = clientX - r.left;
+      const py = clientY - r.top;
+      const cx = x + b.width/2;
+      const cy = y + b.height/2;
+      if (Math.hypot(px - cx, py - cy) < 130){
+        x = Math.random() * maxX;
+        y = Math.random() * maxY;
+      }
+    }
 
-/* Falling hearts */
-const heartsLayer = document.getElementById("heartsLayer");
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerText = ["💖","💘","💞","💕"][Math.floor(Math.random()*4)];
-  heart.style.left = Math.random()*100 + "vw";
-  heart.style.fontSize = (14 + Math.random()*20) + "px";
-  heart.style.animationDuration = (4 + Math.random()*4) + "s";
-  heartsLayer.appendChild(heart);
-  setTimeout(()=>heart.remove(), 8000);
-}, 300);
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+    noBtn.style.transform = "none";
+  }
 
-/* Sparkles */
-for(let i=0;i<35;i++){
-  const s = document.createElement("div");
-  s.className = "sparkle";
-  s.style.top = Math.random()*100 + "vh";
-  s.style.left = Math.random()*100 + "vw";
-  s.style.animationDelay = Math.random()*3 + "s";
-  document.body.appendChild(s);
-}
+  noBtn.addEventListener("mouseenter", (e) => moveNo(e.clientX, e.clientY));
+  noBtn.addEventListener("mousemove",  (e) => moveNo(e.clientX, e.clientY));
+  noBtn.addEventListener("mousedown",  (e) => { e.preventDefault(); moveNo(e.clientX, e.clientY); });
 
+  noBtn.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    moveNo(t.clientX, t.clientY);
+  }, { passive: true });
+
+  window.addEventListener("load", () => {
+    const r = arena.getBoundingClientRect();
+    moveNo(r.left + r.width/2, r.top + r.height/2);
+  });
+
+  // ---------- YES CLICK ----------
+  yesBtn.addEventListener("click", () => {
+    askView.classList.add("hidden");
+    yesView.classList.remove("hidden");
+    yesView.style.display = "block";
+    burstConfetti();
+    heartBurst();
+    petalBurst();
+  });
+
+  // ---------- Premium Night Mode Toggle ----------
+  modeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("night");
+    modeToggle.textContent = document.body.classList.contains("night") ? "☀️ Day mode" : "🌙 Night mode";
+  });
+
+  // ---------- Falling Hearts ----------
+  const heartsLayer = document.getElementById("heartsLayer");
+  const heartChars = ["💗","💖","💘","💝","💞","💕","❤️"];
+
+  function spawnHeart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+    const left = Math.random()*100;
+    const size = 14 + Math.random()*26;
+    const dur  = 5 + Math.random()*7;
+
+    h.style.left = left + "vw";
+    h.style.fontSize = size + "px";
+    h.style.animationDuration = dur + "s";
+    h.style.opacity = (0.65 + Math.random()*0.30).toFixed(2);
+
+    // gentle drift
+    const drift = (Math.random()*40 - 20);
+    const rot = (Math.random()*720 - 360);
+    h.style.transform = `translateX(${drift}vw) rotate(${rot}deg)`;
+
+    heartsLayer.appendChild(h);
+    setTimeout(()=>h.remove(), (dur+0.8)*1000);
+  }
+  setInterval(spawnHeart, 230);
+
+  // ---------- Sparkles (twinkles) ----------
+  const sparklesLayer = document.getElementById("sparklesLayer");
+
+  function spawnSparkle(){
+    const s = document.createElement("div");
+    s.style.position = "absolute";
+    s.style.left = (Math.random()*100) + "vw";
+    s.style.top  = (Math.random()*100) + "vh";
+    s.style.width = s.style.height = (2 + Math.random()*3) + "px";
+    s.style.borderRadius = "50%";
+    s.style.background = "rgba(255,255,255,0.95)";
+    s.style.boxShadow = "0 0 14px rgba(255,255,255,0.65)";
+    s.style.opacity = "0";
+    s.style.transition = "opacity 600ms ease";
+
+    sparklesLayer.appendChild(s);
+
+    requestAnimationFrame(()=>{ s.style.opacity = (0.55 + Math.random()*0.4).toFixed(2); });
+    setTimeout(()=>{ s.style.opacity = "0"; }, 900 + Math.random()*600);
+    setTimeout(()=>{ s.remove(); }, 1800);
+  }
+  setInterval(spawnSparkle, 240);
+
+  // ---------- Petals (soft rose petals drift) ----------
+  const petalsLayer = document.getElementById("petalsLayer");
+  const petalChars = ["🌸","💮","🌺"];
+
+  function spawnPetal(){
+    const p = document.createElement("div");
+    p.textContent = petalChars[Math.floor(Math.random()*petalChars.length)];
+    p.style.position = "absolute";
+    p.style.left = (Math.random()*100) + "vw";
+    p.style.top  = "-12vh";
+    p.style.fontSize = (14 + Math.random()*18) + "px";
+    p.style.opacity = (0.45 + Math.random()*0.35).toFixed(2);
+
+    const dur = 7 + Math.random()*8;
+    const drift = (Math.random()*50 - 25);
+    const rot = (Math.random()*720 - 360);
+
+    p.animate([
+      { transform:`translate(0,0) rotate(0deg)` , opacity: p.style.opacity },
+      { transform:`translate(${drift}vw, 115vh) rotate(${rot}deg)`, opacity: p.style.opacity }
+    ], { duration: dur*1000, iterations: 1, easing: "linear" });
+
+    petalsLayer.appendChild(p);
+    setTimeout(()=>p.remove(), (dur+0.8)*1000);
+  }
+  setInterval(spawnPetal, 520);
+
+  // ---------- Heart burst on YES ----------
+  function heartBurst(){
+    for(let i=0;i<18;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+      h.style.left = (50 + (Math.random()*12-6)) + "vw";
+      h.style.fontSize = (18 + Math.random()*20) + "px";
+      h.style.animationDuration = (1.6 + Math.random()*0.8) + "s";
+      heartsLayer.appendChild(h);
+      setTimeout(()=>h.remove(), 2600);
+    }
+  }
+
+  // ---------- Petal burst on YES ----------
+  function petalBurst(){
+    for(let i=0;i<10;i++){
+      const p = document.createElement("div");
+      p.textContent = petalChars[Math.floor(Math.random()*petalChars.length)];
+      p.style.position = "absolute";
+      p.style.left = (50 + (Math.random()*10-5)) + "vw";
+      p.style.top  = (48 + (Math.random()*6-3)) + "vh";
+      p.style.fontSize = (18 + Math.random()*18) + "px";
+      p.style.opacity = "0.85";
+      petalsLayer.appendChild(p);
+
+      const drift = (Math.random()*40 - 20);
+      const up = (Math.random()*30 + 10);
+
+      p.animate([
+        { transform:`translate(0,0) rotate(0deg)`, opacity: 0.85 },
+        { transform:`translate(${drift}vw, ${-up}vh) rotate(${Math.random()*540-270}deg)`, opacity: 0 }
+      ], { duration: 1600 + Math.random()*600, iterations: 1, easing: "ease-out" });
+
+      setTimeout(()=>p.remove(), 2400);
+    }
+  }
+
+  // ---------- Surprise on photo tap (glow reveal + tiny confetti) ----------
+  function doSurprise(){
+    glow.classList.add("on");
+    burstConfetti(90);
+    setTimeout(()=>glow.classList.remove("on"), 900);
+  }
+  photo.addEventListener("click", doSurprise);
+  photo.addEventListener("touchstart", doSurprise, { passive: true });
+
+  // ---------- Confetti ----------
+  const canvas = document.getElementById("confettiCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function resize(){
+    canvas.width  = Math.floor(window.innerWidth  * devicePixelRatio);
+    canvas.height = Math.floor(window.innerHeight * devicePixelRatio);
+    canvas.style.width  = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  let pieces = [];
+  let confettiOn = false;
+
+  function burstConfetti(count = 160){
+    pieces = [];
+    const colors = ["#ffffff","#ff2d55","#ff86c8","#ffd1e8","#111827","#ffe66d","#7dd3fc","#ffd6a5"];
+    for(let i=0;i<count;i++){
+      pieces.push({
+        x: window.innerWidth/2 + (Math.random()*140-70),
+        y: window.innerHeight/2 + (Math.random()*50-25),
+        vx:(Math.random()*7-3.5),
+        vy:(Math.random()*-10-4),
+        g:0.22 + Math.random()*0.10,
+        s:3 + Math.random()*4,
+        a:Math.random()*Math.PI*2,
+        va:(Math.random()*0.22-0.11),
+        c:colors[Math.floor(Math.random()*colors.length)],
+        life: 130 + Math.random()*80
+      });
+    }
+    confettiOn = true;
+    requestAnimationFrame(drawConfetti);
+  }
+
+  function drawConfetti(){
+    if(!confettiOn) return;
+    ctx.clearRect(0,0,window.innerWidth, window.innerHeight);
+
+    for(const p of pieces){
+      p.x += p.vx; p.y += p.vy; p.vy += p.g; p.a += p.va; p.life -= 1;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.a);
+      ctx.fillStyle = p.c;
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life/210));
+      ctx.fillRect(-p.s, -p.s, p.s*2.2, p.s*1.4);
+      ctx.restore();
+    }
+
+    pieces = pieces.filter(p => p.life > 0 && p.y < window.innerHeight + 60);
+    if(pieces.length) requestAnimationFrame(drawConfetti);
+    else { confettiOn = false; ctx.clearRect(0,0,window.innerWidth, window.innerHeight); }
+  }
 </script>
 </body>
 </html>
